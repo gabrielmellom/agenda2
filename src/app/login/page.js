@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import { firebaseApp } from "../../firebaseConfig";
+import { firebaseApp } from "../../../firebaseConfig";
 
 const auth = getAuth(firebaseApp);
 
@@ -16,8 +16,7 @@ export default function LoginPage() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // Updated redirect path to sidebar
-        router.push("/sidebar");
+        router.push("/dashboard");
       }
     });
     return () => unsubscribe();
@@ -28,8 +27,6 @@ export default function LoginPage() {
     setError(null);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      // Adding direct navigation after successful login
-      router.push("/sidebar");
     } catch (error) {
       setError("Credenciais inválidas. Tente novamente.");
     }
