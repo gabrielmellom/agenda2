@@ -1,10 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Home, Calendar, DollarSign, Settings, Briefcase, Star, Menu, LogOut } from "lucide-react";
+import { Home, Calendar, DollarSign, Settings, Briefcase, Star, Menu, LogOut, User } from "lucide-react";
 import { useRouter } from 'next/navigation';
 import MeusServicosPage from "../meus-servicos/page";
 import MeusHorarios from "../configurar-horarios/page";
+import MinhaAgenda from "../agenda/page";
+import Colaborador from "../usuario/page";
 import financeiro from "../financeiro/page";
+import linkMarcacao from "../link/page";
 import { getAuth, signOut } from "firebase/auth";
 import { app } from "../../../firebaseConfig";
 
@@ -17,12 +20,13 @@ const CriarLink = () => (
 );
 
 const menuItems = [
-  { name: "Criar Link de Marcação", icon: Home, component: CriarLink },
-  { name: "Minha Agenda", icon: Calendar },
+  { name: "Criar Link de Marcação", icon: Home, component: linkMarcacao },
+  { name: "Minha Agenda", icon: Calendar, component: MinhaAgenda},
   { name: "Financeiro", icon: DollarSign, component: financeiro },
   { name: "Configuração de Horário", icon: Settings, component: MeusHorarios },
   { name: "Meus Serviços", icon: Briefcase, component: MeusServicosPage },
   { name: "Avaliação e Feedback", icon: Star },
+  { name: "Cadastro colaborador", icon: User ,component: Colaborador},
 ];
 
 export default function Dashboard() {
