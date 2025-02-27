@@ -1,15 +1,19 @@
-import { NextResponse } from 'next/server'; 
+import { NextRequest, NextResponse } from 'next/server'; 
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { doc, getDoc } from 'firebase/firestore'; 
 import { db } from '../../../../../firebaseConfig';  
 
+export const revalidate = 60; // Revalidate every 60 seconds
+
+
 export async function GET(request) {
   try {
-    // Extrair parâmetros da URL
-    const { searchParams } = new URL(request.url);
+    // Extrair parâmetros da URL usando NextRequest
+    const searchParams = request.nextUrl.searchParams;
     const agendamentoId = searchParams.get('agendamentoId');
     const profissionalId = searchParams.get('profissionalId');
     
+    // Validações de parâmetros obrigatórios
     if (!agendamentoId) {
       return NextResponse.json(
         { error: 'ID do agendamento é obrigatório' },
@@ -40,7 +44,7 @@ export async function GET(request) {
     
     // Encontrar o agendamento correspondente
     const agendamento = agendamentos.find(
-      agendamento => agendamento.agendamentoId === agendamentoId
+      (agendamento) => agendamento.agendamentoId === agendamentoId
     );
     
     if (!agendamento) {
@@ -73,7 +77,10 @@ export async function GET(request) {
   } catch (error) {
     console.error('Erro ao verificar pagamento:', error);
     return NextResponse.json(
-      { error: 'Falha ao processar verificação', details: error.message },
+      { 
+        error: 'Falha ao processar verificação', 
+        details: error.message 
+      },
       { status: 500 }
     );
   }

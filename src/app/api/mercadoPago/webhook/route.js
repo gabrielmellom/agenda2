@@ -20,7 +20,7 @@ export async function POST(request) {
     
     // Get the Mercado Pago signature from headers
     const mpSignature = request.headers.get('x-signature') || '';
-    const secretKey = process.env.MERCADO_PAGO_WEBHOOK_SECRET || 'fc03642ad2ff4be34edf589f7c214f258eef16ca64af11048ca6f6648df5ae23';
+    const secretKey = process.env.MERCADO_PAGO_WEBHOOK_SECRET || '898f742479245d3a8ff478331caa605b317917823160125ee848afaa831e640f';
     
     // Verify the signature (optional but recommended for production)
     if (secretKey && mpSignature) {

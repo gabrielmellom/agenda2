@@ -31,7 +31,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "src/app/api/mercadoPago/route.js"  ],
+, "src/app/api/mercadoPago/route.js", "src/app/api/mercadoPago/status/route.ts"  ],
   "exclude": [
     "node_modules"
   ]
