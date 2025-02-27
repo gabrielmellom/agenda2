@@ -1,6 +1,6 @@
 // File: /app/api/sidebar/route.js
 import { NextResponse } from 'next/server';
-import { db } from '../../../firebaseConfig';
+import { db } from '../../../../../firebaseConfig';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import crypto from 'crypto';
 
