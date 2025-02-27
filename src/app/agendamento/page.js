@@ -55,6 +55,10 @@ export default function Agendamento() {
   const handleConfirmDate = () => {
     setStep(3);
   };
+  const handleConfirmPayment = () => {
+    // Depois de gerar o pagamento, avançamos para o Passo 4
+    setStep(4);
+  };
 
   const generatePayment = () => {
     // Aqui você implementaria a lógica para gerar o código PIX

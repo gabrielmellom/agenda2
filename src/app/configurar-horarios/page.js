@@ -65,18 +65,6 @@ export default function ScheduleConfig() {
     return Math.floor(totalMinutes / slotDuration);
   };
 
-  // Função para preparar dados para o Firebase
-  const prepareDataForFirebase = (currentSchedules) => {
-    const horariosServicos = {};
-    Object.entries(currentSchedules).forEach(([day, turns]) => {
-      const validTurns = turns.filter(turn => turn.inicio && turn.fim);
-      if (validTurns.length > 0) {
-        horariosServicos[day] = validTurns;
-      }
-    });
-    return horariosServicos;
-  };
-
   // Carregar dados do Firebase
   useEffect(() => {
     const loadData = async () => {
@@ -158,39 +146,12 @@ export default function ScheduleConfig() {
     }));
   };
 
-  // Remover turno e salvar imediatamente no Firebase
-  const removeTurn = async (day, index) => {
-    // Primeiro, atualize o estado local
-    const newSchedules = {
-      ...schedules
-    };
-    newSchedules[day] = newSchedules[day].filter((_, i) => i !== index);
-    setSchedules(newSchedules);
-    
-    // Depois, salve no Firebase
-    if (auth.currentUser) {
-      try {
-        setLoading(true);
-        const docRef = doc(db, 'usuario', auth.currentUser.uid);
-        
-        // Preparar dados para o Firebase
-        const horariosServicos = prepareDataForFirebase(newSchedules);
-        
-        await updateDoc(docRef, {
-          horariosServicos
-        });
-        
-        // Feedback visual opcional
-        console.log('Horário removido com sucesso!');
-      } catch (error) {
-        console.error('Erro ao remover horário:', error);
-        alert('Erro ao remover o horário.');
-      } finally {
-        setLoading(false);
-      }
-    } else {
-      alert('Usuário não está logado!');
-    }
+  // Remover turno
+  const removeTurn = (day, index) => {
+    setSchedules(prev => ({
+      ...prev,
+      [day]: prev[day].filter((_, i) => i !== index)
+    }));
   };
 
   // Salvar dados no Firebase
@@ -205,8 +166,14 @@ export default function ScheduleConfig() {
       const docRef = doc(db, 'usuario', auth.currentUser.uid);
       const docSnap = await getDoc(docRef);
 
-      // Preparar dados para o Firebase
-      const horariosServicos = prepareDataForFirebase(schedules);
+      // Filtra apenas os horários com início e fim preenchidos
+      const horariosServicos = {};
+      Object.entries(schedules).forEach(([day, turns]) => {
+        const validTurns = turns.filter(turn => turn.inicio && turn.fim);
+        if (validTurns.length > 0) {
+          horariosServicos[day] = validTurns;
+        }
+      });
 
       const dadosParaSalvar = {
         duracaoDaSessao: parseInt(duracaoDaSessao),
@@ -293,7 +260,6 @@ export default function ScheduleConfig() {
                             variant="ghost"
                             size="sm"
                             onClick={() => removeTurn(day, index)}
-                            disabled={loading}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -337,7 +303,6 @@ export default function ScheduleConfig() {
                     size="sm"
                     onClick={() => addTurn(day)}
                     className="w-full"
-                    disabled={loading}
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Adicionar Turno

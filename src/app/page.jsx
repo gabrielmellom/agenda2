@@ -1,5 +1,4 @@
 "use client"
-
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
